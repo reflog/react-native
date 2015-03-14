@@ -137,7 +137,7 @@ HasteDependencyResolver.prototype.wrapModule = function(module, code) {
     code.replace(REL_REQUIRE_STMT, function(codeMatch, depName) {
       var depId = resolvedDeps[depName];
       if (depId != null) {
-        return 'require(\'' + depId + '\')';
+        return 'require(\'' + depId.replace(/\\/g,'\\\\') + '\')';
       } else {
         return codeMatch;
       }
@@ -145,7 +145,7 @@ HasteDependencyResolver.prototype.wrapModule = function(module, code) {
 
   return DEFINE_MODULE_CODE.replace(DEFINE_MODULE_REPLACE_RE, function(key) {
     return {
-      '_moduleName_': module.id,
+      '_moduleName_': module.id.replace(/\\/g,'\\\\'),
       '_code_': relativizedCode,
       '_deps_': JSON.stringify(resolvedDepsArr),
     }[key];

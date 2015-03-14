@@ -172,6 +172,7 @@ DependecyGraph.prototype.resolveDependency = function(
 
     dep = this._graph[modulePath];
     if (dep == null) {
+      console.error("Warning: Missing" + modulePath);
       debug(
         'WARNING: Cannot find required module `%s` from module `%s`.' +
         ' Inferred required module path is %s',
@@ -309,6 +310,7 @@ DependecyGraph.prototype._findAndProcessPackage = function(files, root) {
         return packageJson;
       });
   } else {
+    //  console.error("Cannot find:" + packagePath);
     return q();
   }
 };
@@ -333,7 +335,8 @@ DependecyGraph.prototype._processModule = function(modulePath) {
       var module = new ModuleDescriptor(moduleData);
       self._updateGraphWithModule(module);
       return module;
-    });
+    })
+    .catch(function(err) { console.error("Cannot find file",err); });
 };
 
 /**
@@ -398,7 +401,7 @@ DependecyGraph.prototype._lookupPackage = function(modulePath) {
     // ideally we stop once we're outside root and this can be a simple child
     // dir check. However, we have to support modules that was symlinked inside
     // our project root.
-    if (currDir === '/') {
+    if (currDir === path.root) {
       return null;
     } else {
       var packageJson = packageByRoot[currDir];
