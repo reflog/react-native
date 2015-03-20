@@ -6,6 +6,8 @@
 
 @interface RCTRedBoxWindow : UIWindow <UITableViewDelegate, UITableViewDataSource>
 
+@property (nonatomic, copy) NSString *lastErrorMessage;
+
 @end
 
 @implementation RCTRedBoxWindow
@@ -13,7 +15,6 @@
   UIView *_rootView;
   UITableView *_stackTraceTableView;
 
-  NSString *_lastErrorMessage;
   NSArray *_lastStackTrace;
 
   UITableViewCell *_cachedMessageCell;
@@ -84,10 +85,9 @@
 
 - (void)showErrorMessage:(NSString *)message withStack:(NSArray *)stack showIfHidden:(BOOL)shouldShow
 {
-  _lastStackTrace = stack;
-  _lastErrorMessage = message;
-
   if (self.hidden && shouldShow) {
+    _lastStackTrace = stack;
+    _lastErrorMessage = message;
 
     _cachedMessageCell = [self reuseCell:nil forErrorMessage:message];
     [_stackTraceTableView reloadData];
@@ -287,6 +287,15 @@
 
 #endif
 
+}
+
+- (NSString *)currentErrorMessage
+{
+  if (_window && !_window.hidden) {
+    return _window.lastErrorMessage;
+  } else {
+    return nil;
+  }
 }
 
 - (void)dismiss

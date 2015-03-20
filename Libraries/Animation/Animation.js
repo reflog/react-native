@@ -6,7 +6,7 @@
  */
 'use strict';
 
-var { RCTAnimationManager } = require('NativeModules');
+var RCTAnimationManager = require('NativeModules').AnimationManager;
 var AnimationUtils = require('AnimationUtils');
 
 type EasingFunction = (t: number) => number;
@@ -23,10 +23,11 @@ var Animation = {
   ): number {
     var nodeHandle = +node.getNodeHandle();
     var easingSample = AnimationUtils.evaluateEasingFunction(duration, easing);
-    RCTAnimationManager.startAnimation(nodeHandle, AnimationUtils.allocateTag(), duration, delay, easingSample, properties);
+    var tag: number = RCTAnimationManager.startAnimation(nodeHandle, AnimationUtils.allocateTag(), duration, delay, easingSample, properties);
+    return tag;
   },
 
-  stopAnimation: function(tag) {
+  stopAnimation: function(tag: number) {
     RCTAnimationManager.stopAnimation(tag);
   },
 };

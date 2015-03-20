@@ -3,7 +3,7 @@
  *
  * @providesModule DatePickerIOS
  *
- * This is a controlled component version of RKDatePickerIOS
+ * This is a controlled component version of RCTDatePickerIOS
  */
 'use strict';
 
@@ -11,7 +11,7 @@ var NativeMethodsMixin = require('NativeMethodsMixin');
 var PropTypes = require('ReactPropTypes');
 var React = require('React');
 var ReactIOSViewAttributes = require('ReactIOSViewAttributes');
-var RKDatePickerIOSConsts = require('NativeModules').RKUIManager.RCTDatePicker.Constants;
+var RCTDatePickerIOSConsts = require('NativeModules').UIManager.RCTDatePicker.Constants;
 var StyleSheet = require('StyleSheet');
 var View = require('View');
 
@@ -62,10 +62,8 @@ var DatePickerIOS = React.createClass({
 
     /**
      * The date picker mode.
-     *
-     * Valid modes on iOS are: 'date', 'time', 'datetime'.
      */
-    mode: PropTypes.oneOf(Object.keys(RKDatePickerIOSConsts.DatePickerModes)),
+    mode: PropTypes.oneOf(['date', 'time', 'datetime']),
 
     /**
      * The interval at which minutes can be selected.
@@ -73,7 +71,7 @@ var DatePickerIOS = React.createClass({
     minuteInterval: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30]),
 
     /**
-     * Timezone offset in seconds.
+     * Timezone offset in minutes.
      *
      * By default, the date picker will use the device's timezone. With this
      * parameter, it is possible to force a certain timezone offset. For
@@ -111,7 +109,7 @@ var DatePickerIOS = React.createClass({
     var props = this.props;
     return (
       <View style={props.style}>
-        <RKDatePickerIOS
+        <RCTDatePickerIOS
           ref={DATEPICKER}
           style={styles.rkDatePickerIOS}
           date={props.date.getTime()}
@@ -121,7 +119,7 @@ var DatePickerIOS = React.createClass({
           minimumDate={
             props.minimumDate ? props.minimumDate.getTime() : undefined
           }
-          mode={RKDatePickerIOSConsts.DatePickerModes[props.mode]}
+          mode={RCTDatePickerIOSConsts.DatePickerModes[props.mode]}
           minuteInterval={props.minuteInterval}
           timeZoneOffsetInMinutes={props.timeZoneOffsetInMinutes}
           onChange={this._onChange}
@@ -133,8 +131,8 @@ var DatePickerIOS = React.createClass({
 
 var styles = StyleSheet.create({
   rkDatePickerIOS: {
-    height: RKDatePickerIOSConsts.ComponentHeight,
-    width: RKDatePickerIOSConsts.ComponentWidth,
+    height: RCTDatePickerIOSConsts.ComponentHeight,
+    width: RCTDatePickerIOSConsts.ComponentWidth,
   },
 });
 
@@ -147,7 +145,7 @@ var rkDatePickerIOSAttributes = merge(ReactIOSViewAttributes.UIView, {
   timeZoneOffsetInMinutes: true,
 });
 
-var RKDatePickerIOS = createReactIOSNativeComponentClass({
+var RCTDatePickerIOS = createReactIOSNativeComponentClass({
   validAttributes: rkDatePickerIOSAttributes,
   uiViewClassName: 'RCTDatePicker',
 });

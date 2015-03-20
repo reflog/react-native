@@ -1,4 +1,4 @@
-var docs = require('../react-docgen');
+var docs = require('react-docgen');
 var fs = require('fs');
 var path = require('path');
 var slugify = require('../core/slugify');
@@ -38,14 +38,13 @@ function componentsToMarkdown(type, json, filepath, i) {
 var components = [
   '../Libraries/Components/ActivityIndicatorIOS/ActivityIndicatorIOS.ios.js',
   '../Libraries/Components/DatePicker/DatePickerIOS.ios.js',
-  '../Libraries/Text/ExpandingText.js',
   '../Libraries/Image/Image.ios.js',
   '../Libraries/Components/ListView/ListView.js',
   '../Libraries/Components/MapView/MapView.js',
   '../Libraries/Components/Navigation/NavigatorIOS.ios.js',
   '../Libraries/Picker/PickerIOS.ios.js',
   '../Libraries/Components/ScrollView/ScrollView.js',
-  '../Libraries/Components/Slider/Slider.js',
+  '../Libraries/Components/SliderIOS/SliderIOS.js',
   '../Libraries/Components/SwitchIOS/SwitchIOS.ios.js',
   '../Libraries/Components/TabBarIOS/TabBarIOS.ios.js',
   '../Libraries/Text/Text.js',
@@ -54,19 +53,24 @@ var components = [
   '../Libraries/Components/Touchable/TouchableOpacity.js',
   '../Libraries/Components/Touchable/TouchableWithoutFeedback.js',
   '../Libraries/Components/View/View.js',
+  '../Libraries/Components/WebView/WebView.ios.js',
 ];
 
 var apis = [
+  '../Libraries/Utilities/AlertIOS.js',
   '../Libraries/Animation/Animation.js',
   '../Libraries/AppRegistry/AppRegistry.js',
   '../Libraries/AppState/AppState.js',
   '../Libraries/AppStateIOS/AppStateIOS.ios.js',
   '../Libraries/Storage/AsyncStorage.ios.js',
   '../Libraries/CameraRoll/CameraRoll.js',
+  '../Libraries/Interaction/InteractionManager.js',
   '../Libraries/Animation/LayoutAnimation.js',
+  '../Libraries/Network/NetInfo.js',
   '../Libraries/Utilities/PixelRatio.js',
   '../Libraries/Components/StatusBar/StatusBarIOS.ios.js',
   '../Libraries/StyleSheet/StyleSheet.js',
+  '../Libraries/Vibration/VibrationIOS.ios.js',
 ];
 
 var all = components.concat(apis);
