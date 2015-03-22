@@ -28,7 +28,9 @@ function componentsToMarkdown(type, json, filepath, i) {
     'layout: autodocs',
     'category: ' + type + 's',
     'permalink: docs/' + slugify(componentName) + '.html',
-    all[i + 1] && ('next: ' + slugify(getNameFromPath(all[i + 1]))),
+    'next: ' + (all[i + 1] ?
+      slugify(getNameFromPath(all[i + 1])) :
+      'network'),
     '---',
     JSON.stringify(json, null, 2),
   ].filter(function(line) { return line; }).join('\n');
@@ -39,7 +41,7 @@ var components = [
   '../Libraries/Components/ActivityIndicatorIOS/ActivityIndicatorIOS.ios.js',
   '../Libraries/Components/DatePicker/DatePickerIOS.ios.js',
   '../Libraries/Image/Image.ios.js',
-  '../Libraries/Components/ListView/ListView.js',
+  '../Libraries/CustomComponents/ListView/ListView.js',
   '../Libraries/Components/MapView/MapView.js',
   '../Libraries/Components/Navigation/NavigatorIOS.ios.js',
   '../Libraries/Picker/PickerIOS.ios.js',
