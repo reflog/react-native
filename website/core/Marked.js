@@ -4,7 +4,6 @@
  * https://github.com/chjj/marked
  *
  * @providesModule Marked
- * @jsx React.DOM
  */
 
 var React = require('React');
@@ -900,7 +899,7 @@ Parser.prototype.tok = function() {
     }
     case 'html': {
       return !this.token.pre && !this.options.pedantic
-        ? this.inline.output(this.token.text)
+        ? React.DOM.span({dangerouslySetInnerHTML: {__html: this.token.text}})
         : this.token.text;
     }
     case 'paragraph': {
