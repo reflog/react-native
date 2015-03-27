@@ -11,7 +11,6 @@
 
 #import "RCTConvert.h"
 #import "RCTLog.h"
-
 #import "RCTShadowRawText.h"
 #import "RCTUtils.h"
 
@@ -50,12 +49,14 @@ static css_dim_t RCTMeasure(void *context, float width)
 {
   return [self _attributedStringWithFontFamily:nil
                                       fontSize:0
-                                    fontWeight:nil];
+                                    fontWeight:nil
+                                     fontStyle:nil];
 }
 
 - (NSAttributedString *)_attributedStringWithFontFamily:(NSString *)fontFamily
                                                fontSize:(CGFloat)fontSize
                                              fontWeight:(NSString *)fontWeight
+                                              fontStyle:(NSString *)fontStyle
 {
   if (![self isTextDirty] && _cachedAttributedString) {
     return _cachedAttributedString;
@@ -67,6 +68,9 @@ static css_dim_t RCTMeasure(void *context, float width)
   if (_fontWeight) {
     fontWeight = _fontWeight;
   }
+  if (_fontStyle) {
+    fontStyle = _fontStyle;
+  }
   if (_fontFamily) {
     fontFamily = _fontFamily;
   }
@@ -75,7 +79,7 @@ static css_dim_t RCTMeasure(void *context, float width)
   for (RCTShadowView *child in [self reactSubviews]) {
     if ([child isKindOfClass:[RCTShadowText class]]) {
       RCTShadowText *shadowText = (RCTShadowText *)child;
-      [attributedString appendAttributedString:[shadowText _attributedStringWithFontFamily:fontFamily fontSize:fontSize fontWeight:fontWeight]];
+      [attributedString appendAttributedString:[shadowText _attributedStringWithFontFamily:fontFamily fontSize:fontSize fontWeight:fontWeight fontStyle:fontStyle]];
     } else if ([child isKindOfClass:[RCTShadowRawText class]]) {
       RCTShadowRawText *shadowRawText = (RCTShadowRawText *)child;
       [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[shadowRawText text] ?: @""]];
@@ -96,7 +100,7 @@ static css_dim_t RCTMeasure(void *context, float width)
     [self _addAttribute:NSBackgroundColorAttributeName withValue:self.textBackgroundColor toAttributedString:attributedString];
   }
 
-  _font = [RCTConvert UIFont:nil withFamily:fontFamily size:@(fontSize) weight:fontWeight];
+  _font = [RCTConvert UIFont:nil withFamily:fontFamily size:@(fontSize) weight:fontWeight style:fontStyle];
   [self _addAttribute:NSFontAttributeName withValue:_font toAttributedString:attributedString];
   [self _addAttribute:RCTReactTagAttributeName withValue:self.reactTag toAttributedString:attributedString];
   [self _setParagraphStyleOnAttributedString:attributedString];
@@ -110,7 +114,7 @@ static css_dim_t RCTMeasure(void *context, float width)
 
 - (UIFont *)font
 {
-  return _font ?: [RCTConvert UIFont:nil withFamily:_fontFamily size:@(_fontSize) weight:_fontWeight];
+  return _font ?: [RCTConvert UIFont:nil withFamily:_fontFamily size:@(_fontSize) weight:_fontWeight style:_fontStyle];
 }
 
 - (void)_addAttribute:(NSString *)attribute withValue:(id)attributeValue toAttributedString:(NSMutableAttributedString *)attributedString
@@ -149,7 +153,6 @@ static css_dim_t RCTMeasure(void *context, float width)
     }
   }];
 
-  // TODO: umm, these can'e be null, so we're mapping left to natural - is that right?
   self.textAlign = _textAlign ?: NSTextAlignmentNatural;
   self.writingDirection = _writingDirection ?: NSWritingDirectionNatural;
 

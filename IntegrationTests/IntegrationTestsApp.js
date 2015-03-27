@@ -25,6 +25,7 @@ var TESTS = [
   require('./IntegrationTestHarnessTest'),
   require('./TimersTest'),
   require('./AsyncStorageTest'),
+  require('./SimpleSnapshotTest'),
 ];
 
 TESTS.forEach(
@@ -80,7 +81,7 @@ var styles = StyleSheet.create({
     padding: 10,
   },
   testName: {
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   separator: {
     height: 1,

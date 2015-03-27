@@ -1,7 +1,6 @@
 html {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-family: proxima-nova, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 300;
   color: #484848;
   line-height: 1.28;
 }
@@ -16,7 +15,7 @@ p {
 
 .subHeader {
   font-size: 21px;
-  font-weight: 200;
+  font-weight: 300;
   line-height: 30px;
   margin-bottom: 10px;
 }
@@ -83,6 +82,11 @@ h4 small {
   font-size: 14px;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 ul, ol {
   margin: 0 0 10px 25px;
   padding: 0;
@@ -130,6 +134,7 @@ html * {
   padding: 5px 10px;
   margin-left: 20px;
   background-color: rgba(5, 165, 209, 0.05);
+  overflow: auto;
 }
 
 .prism + .prism {
@@ -230,7 +235,7 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
   color: #fafafa;
   position: fixed;
   top: 0;
-  height: 50px;
+  min-height: 50px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   width: 100%;
   z-index: 100;
@@ -250,7 +255,15 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
   text-decoration: none;
 }
 
-.nav-main .nav-site {
+.nav-main .nav-site-wrapper {
+  display: inline;
+}
+
+.nav-main .nav-site-internal {
+  margin: 0 0 0 20px;
+}
+
+.nav-main .nav-site-external {
   float: right;
   margin: 0;
 }
@@ -260,21 +273,20 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
 }
 
 .nav-main .nav-site a {
-  padding: 0 8px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  box-sizing: content-box;
+  padding: 0 10px;
   line-height: 50px;
   display: inline-block;
   height: 50px;
-  color: #aaa;
+  color: #ddd;
 }
 
 .nav-main .nav-site a:hover {
-  color: #fafafa;
+  color: #fff;
 }
 
 .nav-main .nav-site a.active {
-  color: #fafafa;
+  color: #fff;
   border-bottom: 3px solid #05A5D1;
   background: #333;
 }
@@ -285,14 +297,18 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
 }
 
 .nav-home img {
-  vertical-align: -7px;
-  margin-right: 7px;
-  width: 30px;
-  height: 30px;
+  vertical-align: -9px;
+  margin-right: 8px;
+  margin-left: 1px;
+  width: 34px;
+}
+.nav-main a.nav-home {
+  color: white;
 }
 
 .nav-main ul {
-  display: inline;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .nav-main li {
@@ -322,7 +338,7 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
 }
 
 .buttons-unit {
-  margin-top: 60px;
+  margin-top: 40px;
   text-align: center;
 }
 
@@ -453,6 +469,14 @@ h1:hover .hash-link, h2:hover .hash-link, h3:hover .hash-link, h4:hover .hash-li
   margin-left: 0;
 }
 
+.tutorial-mock {
+  text-align: center;
+}
+.tutorial-mock img {
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 5px #888888;
+}
+
 #examples h3, .home-presentation h3 {
   color: #2d2d2d;
   font-size: 24px;
@@ -574,7 +598,7 @@ section.black content {
   font-size: 24px;
 }
 
-.documentationContent h2 {
+h2 {
   margin-top: 30px;
 }
 

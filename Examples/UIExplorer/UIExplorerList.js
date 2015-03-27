@@ -1,10 +1,15 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
+ * The examples provided by Facebook are for non-commercial testing and
+ * evaluation purposes only.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * Facebook reserves all rights not expressly granted.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
+ * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @flow
  */
@@ -12,15 +17,18 @@
 
 var React = require('react-native');
 var {
+  AppRegistry,
   ListView,
   PixelRatio,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableHighlight,
   View,
 } = React;
+var NavigatorExample = require('./Navigator/NavigatorExample');
+
+var { TestModule } = React.addons;
 
 var createExamplePage = require('./createExamplePage');
 
@@ -32,6 +40,7 @@ var COMPONENTS = [
   require('./ListViewSimpleExample'),
   require('./MapViewExample'),
   require('./NavigatorIOSExample'),
+  NavigatorExample,
   require('./PickerExample'),
   require('./ScrollViewExample'),
   require('./SliderIOSExample'),
@@ -48,15 +57,17 @@ var APIS = [
   require('./ActionSheetIOSExample'),
   require('./AdSupportIOSExample'),
   require('./AlertIOSExample'),
-  require('./AppStateExample'),
   require('./AppStateIOSExample'),
   require('./AsyncStorageExample'),
+  require('./BorderExample'),
   require('./CameraRollExample.ios'),
   require('./GeolocationExample'),
   require('./LayoutExample'),
   require('./NetInfoExample'),
   require('./PointerEventsExample'),
+  require('./PushNotificationIOSExample'),
   require('./StatusBarIOSExample'),
+  require('./ResponderExample'),
   require('./TimerExample'),
   require('./VibrationIOSExample'),
 ];
@@ -64,6 +75,33 @@ var APIS = [
 var ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2,
   sectionHeaderHasChanged: (h1, h2) => h1 !== h2,
+});
+
+function makeRenderable(example: any): ReactClass<any, any, any> {
+  return example.examples ?
+    createExamplePage(null, example) :
+    example;
+}
+
+// Register suitable examples for snapshot tests
+COMPONENTS.concat(APIS).forEach((Example) => {
+  if (Example.displayName) {
+    var Snapshotter = React.createClass({
+      componentDidMount: function() {
+        // View is still blank after first RAF :\
+        global.requestAnimationFrame(() =>
+          global.requestAnimationFrame(() => TestModule.verifySnapshot(
+            TestModule.markTestCompleted
+          )
+        ));
+      },
+      render: function() {
+        var Renderable = makeRenderable(Example);
+        return <Renderable />;
+      },
+    });
+    AppRegistry.registerComponent(Example.displayName, () => Snapshotter);
+  }
 });
 
 class UIExplorerList extends React.Component {
@@ -143,9 +181,13 @@ class UIExplorerList extends React.Component {
   }
 
   _onPressRow(example) {
-    var Component = example.examples ?
-      createExamplePage(null, example) :
-      example;
+    if (example === NavigatorExample) {
+      this.props.onExternalExampleRequested(
+        NavigatorExample
+      );
+      return;
+    }
+    var Component = makeRenderable(example);
     this.props.navigator.push({
       title: Component.title,
       component: Component,
@@ -167,7 +209,7 @@ var styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   sectionHeaderTitle: {
-    fontWeight: 'bold',
+    fontWeight: '500',
     fontSize: 11,
   },
   row: {
@@ -183,7 +225,7 @@ var styles = StyleSheet.create({
   },
   rowTitleText: {
     fontSize: 17,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   rowDetailText: {
     fontSize: 15,

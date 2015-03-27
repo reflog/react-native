@@ -1,12 +1,18 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
+ * The examples provided by Facebook are for non-commercial testing and
+ * evaluation purposes only.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * Facebook reserves all rights not expressly granted.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
+ * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @providesModule createExamplePage
+ * @flow
  */
 'use strict';
 
@@ -16,7 +22,19 @@ var UIExplorerPage = require('./UIExplorerPage');
 
 var invariant = require('invariant');
 
-var createExamplePage = function(title, exampleModule) {
+class Example extends React.Component {
+  title: string;
+  description: string;
+}
+
+type ExampleModule = {
+  title: string;
+  description: string;
+  examples: Array<Example>;
+};
+
+var createExamplePage = function(title: ?string, exampleModule: ExampleModule)
+  : ReactClass<any, any, any> {
   invariant(!!exampleModule.examples, 'The module must have examples');
 
   var ExamplePage = React.createClass({
@@ -31,15 +49,17 @@ var createExamplePage = function(title, exampleModule) {
       var originalRenderComponent = React.renderComponent;
       var originalRender = React.render;
       var renderedComponent;
-      React.render = React.renderComponent = function(element, container) {
+      // TODO remove typecasts when Flow bug #6560135 is fixed
+      // and workaround is removed from react-native.js
+      (React: Object).render = (React: Object).renderComponent = function(element, container) {
         renderedComponent = element;
       };
       var result = example.render(null);
       if (result) {
         renderedComponent = result;
       }
-      React.renderComponent = originalRenderComponent;
-      React.render = originalRender;
+      (React: Object).renderComponent = originalRenderComponent;
+      (React: Object).render = originalRender;
       return (
         <UIExplorerBlock
           key={i}

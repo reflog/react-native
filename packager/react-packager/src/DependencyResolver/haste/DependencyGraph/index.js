@@ -184,6 +184,12 @@ DependecyGraph.prototype.resolveDependency = function(
     var main = packageJson.main || 'index';
     modulePath = withExtJs(path.join(packageJson._root, main));
     dep = this._graph[modulePath];
+
+    // Some packages use just a dir and rely on an index.js inside that dir.
+    if (dep == null) {
+      dep = this._graph[path.join(packageJson._root, main, 'index.js')];
+    }
+
     if (dep == null) {
       throw new Error(
         'Cannot find package main file for package: ' + packageJson._root
@@ -210,6 +216,13 @@ DependecyGraph.prototype.resolveDependency = function(
     modulePath = withExtJs(path.join(dir, depModuleId));
 
     dep = this._graph[modulePath];
+
+    if (dep == null) {
+      modulePath = path.join(dir, depModuleId, 'index.js');
+    }
+
+    dep = this._graph[modulePath];
+
     if (dep == null) {
       console.error("Warning: Missing" + modulePath);
       debug(
@@ -362,6 +375,10 @@ DependecyGraph.prototype._processModule = function(modulePath) {
       if (moduleDocBlock.providesModule || moduleDocBlock.provides) {
         moduleData.id =
           moduleDocBlock.providesModule || moduleDocBlock.provides;
+
+        // Incase someone wants to require this module via
+        // packageName/path/to/module
+        moduleData.altId = self._lookupName(modulePath);
       } else {
         moduleData.id = self._lookupName(modulePath);
       }
@@ -398,6 +415,10 @@ DependecyGraph.prototype._deleteModule = function(module) {
   if (this._moduleById[module.id] === module) {
     delete this._moduleById[module.id];
   }
+
+  if (module.altId && this._moduleById[module.altId] === module) {
+    delete this._moduleById[module.altId];
+  }
 };
 
 /**
@@ -421,6 +442,12 @@ DependecyGraph.prototype._updateGraphWithModule = function(module) {
   }
 
   this._moduleById[module.id] = module;
+
+  // Some module maybe refrenced by both @providesModule and
+  // require(package/moduleName).
+  if (module.altId != null && this._moduleById[module.altId] == null) {
+    this._moduleById[module.altId] = module;
+  }
 };
 
 /**

@@ -7,6 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  *
  * @providesModule SliderIOS
+ * @flow
  */
 'use strict';
 
@@ -21,6 +22,8 @@ var createReactIOSNativeComponentClass =
   require('createReactIOSNativeComponentClass');
 var merge = require('merge');
 
+type Event = Object;
+
 var SliderIOS = React.createClass({
   mixins: [NativeMethodsMixin],
 
@@ -32,13 +35,24 @@ var SliderIOS = React.createClass({
     style: View.propTypes.style,
 
     /**
-     * Initial value of the slider. The value should be between 0 and 1.
+     * Initial value of the slider. The value should be between minimumValue
+     * and maximumValue, which default to 0 and 1 respectively.
      * Default value is 0.
      *
      * *This is not a controlled component*, e.g. if you don't update
-     * the value, the component won't be reseted to it's inital value.
+     * the value, the component won't be reset to it's inital value.
      */
     value: PropTypes.number,
+
+    /**
+     * Initial minimum value of the slider. Default value is 0.
+     */
+    minimumValue: PropTypes.number,
+
+    /**
+     * Initial maximum value of the slider. Default value is 1.
+     */
+    maximumValue: PropTypes.number,
 
     /**
      * Callback continuously called while the user is dragging the slider.
@@ -52,7 +66,7 @@ var SliderIOS = React.createClass({
     onSlidingComplete: PropTypes.func,
   },
 
-  _onValueChange: function(event) {
+  _onValueChange: function(event: Event) {
     this.props.onChange && this.props.onChange(event);
     if (event.nativeEvent.continuous) {
       this.props.onValueChange &&

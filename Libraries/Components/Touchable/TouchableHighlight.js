@@ -10,11 +10,13 @@
  */
 'use strict';
 
+// Note (avik): add @flow when Flow supports spread properties in propTypes
+
 var NativeMethodsMixin = require('NativeMethodsMixin');
 var React = require('React');
 var ReactIOSViewAttributes = require('ReactIOSViewAttributes');
 var StyleSheet = require('StyleSheet');
-var TimerMixin = require('TimerMixin');
+var TimerMixin = require('react-timer-mixin');
 var Touchable = require('Touchable');
 var TouchableWithoutFeedback = require('TouchableWithoutFeedback');
 var View = require('View');

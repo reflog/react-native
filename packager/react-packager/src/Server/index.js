@@ -92,16 +92,19 @@ Server.prototype._rebuildPackages = function() {
   Object.keys(packages).forEach(function(key) {
     var options = getOptionsFromUrl(key);
     // Wait for a previous build (if exists) to finish.
-    packages[key] = (packages[key] || q()).then(function() {
-      return buildPackage(options).then(function(p) {
+    packages[key] = (packages[key] || q()).finally(function() {
+      // With finally promise callback we can't change the state of the promise
+      // so we need to reassign the promise.
+      packages[key] = buildPackage(options).then(function(p) {
         // Make a throwaway call to getSource to cache the source string.
         p.getSource({
-          inlineSourceMap: options.dev,
+          inlineSourceMap: options.inlineSourceMap,
           minify: options.minify,
         });
         return p;
       });
     });
+    return packages[key];
   });
 };
 
@@ -225,7 +228,7 @@ Server.prototype.processRequest = function(req, res, next) {
     function(p) {
       if (requestType === 'bundle') {
         res.end(p.getSource({
-          inlineSourceMap: options.dev,
+          inlineSourceMap: options.inlineSourceMap,
           minify: options.minify,
         }));
         Activity.endEvent(startReqEventId);
@@ -261,6 +264,11 @@ function getOptionsFromUrl(reqUrl) {
     dev: getBoolOptionFromQuery(urlObj.query, 'dev', true),
     minify: getBoolOptionFromQuery(urlObj.query, 'minify'),
     runModule: getBoolOptionFromQuery(urlObj.query, 'runModule', true),
+    inlineSourceMap: getBoolOptionFromQuery(
+      urlObj.query,
+      'inlineSourceMap',
+      false
+    ),
   };
 }
 

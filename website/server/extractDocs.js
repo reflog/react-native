@@ -19,6 +19,9 @@ function getNameFromPath(filepath) {
   while (ext = path.extname(filepath)) {
     filepath = path.basename(filepath, ext);
   }
+  if (filepath === 'LayoutPropTypes') {
+    return 'Flexbox';
+  }
   return filepath;
 }
 
@@ -39,7 +42,7 @@ function componentsToMarkdown(type, json, filepath, i, styles) {
     'id: ' + slugify(componentName),
     'title: ' + componentName,
     'layout: autodocs',
-    'category: ' + type + 's',
+    'category: ' + (type === 'style' ? 'Polyfills' : type + 's'),
     'permalink: docs/' + slugify(componentName) + '.html',
     'next: ' + (all[i + 1] ?
       slugify(getNameFromPath(all[i + 1])) :
@@ -50,12 +53,46 @@ function componentsToMarkdown(type, json, filepath, i, styles) {
   return res;
 }
 
+var n;
+
+function renderComponent(filepath) {
+  var json = docgen.parse(
+    fs.readFileSync(filepath),
+    docgenHelpers.findExportedOrFirst,
+    docgen.defaultHandlers.concat(docgenHelpers.stylePropTypeHandler)
+  );
+  return componentsToMarkdown('component', json, filepath, n++, styleDocs);
+}
+
+function renderAPI(type) {
+  return function(filepath) {
+    var json;
+    try {
+      json = jsDocs(fs.readFileSync(filepath).toString());
+    } catch(e) {
+      console.error('Cannot parse file', filepath);
+      json = {};
+    }
+    return componentsToMarkdown(type, json, filepath, n++);
+  };
+}
+
+function renderStyle(filepath) {
+  var json = docgen.parse(
+    fs.readFileSync(filepath),
+    docgenHelpers.findExportedObject,
+    [docgen.handlers.propTypeHandler]
+  );
+  return componentsToMarkdown('style', json, filepath, n++);
+}
+
 var components = [
   '../Libraries/Components/ActivityIndicatorIOS/ActivityIndicatorIOS.ios.js',
   '../Libraries/Components/DatePicker/DatePickerIOS.ios.js',
   '../Libraries/Image/Image.ios.js',
   '../Libraries/CustomComponents/ListView/ListView.js',
   '../Libraries/Components/MapView/MapView.js',
+  '../Libraries/CustomComponents/Navigator/Navigator.js',
   '../Libraries/Components/Navigation/NavigatorIOS.ios.js',
   '../Libraries/Picker/PickerIOS.ios.js',
   '../Libraries/Components/ScrollView/ScrollView.js',
@@ -75,14 +112,16 @@ var apis = [
   '../Libraries/Utilities/AlertIOS.js',
   '../Libraries/Animation/Animation.js',
   '../Libraries/AppRegistry/AppRegistry.js',
-  '../Libraries/AppState/AppState.js',
   '../Libraries/AppStateIOS/AppStateIOS.ios.js',
   '../Libraries/Storage/AsyncStorage.ios.js',
   '../Libraries/CameraRoll/CameraRoll.js',
   '../Libraries/Interaction/InteractionManager.js',
   '../Libraries/Animation/LayoutAnimation.js',
+  '../Libraries/LinkingIOS/LinkingIOS.js',
   '../Libraries/Network/NetInfo.js',
+  '../Libraries/vendor/react/browser/eventPlugins/PanResponder.js',
   '../Libraries/Utilities/PixelRatio.js',
+  '../Libraries/PushNotificationIOS/PushNotificationIOS.js',
   '../Libraries/Components/StatusBar/StatusBarIOS.ios.js',
   '../Libraries/StyleSheet/StyleSheet.js',
   '../Libraries/Vibration/VibrationIOS.ios.js',
@@ -95,7 +134,15 @@ var styles = [
   '../Libraries/Image/ImageStylePropTypes.js',
 ];
 
-var all = components.concat(apis).concat(styles.slice(0, 1));
+var polyfills = [
+  '../Libraries/GeoLocation/Geolocation.ios.js',
+];
+
+var all = components
+  .concat(apis)
+  .concat(styles.slice(0, 1))
+  .concat(polyfills);
+
 var styleDocs = styles.slice(1).reduce(function(docs, filepath) {
   docs[path.basename(filepath).replace(path.extname(filepath), '')] =
     docgen.parse(
@@ -107,32 +154,11 @@ var styleDocs = styles.slice(1).reduce(function(docs, filepath) {
 }, {});
 
 module.exports = function() {
-  var i = 0;
+  n = 0;
   return [].concat(
-    components.map(function(filepath) {
-      var json = docgen.parse(
-        fs.readFileSync(filepath),
-        docgenHelpers.findExportedOrFirst,
-        docgen.defaultHandlers.concat(docgenHelpers.stylePropTypeHandler)
-      );
-      return componentsToMarkdown('component', json, filepath, i++, styleDocs);
-    }),
-    apis.map(function(filepath) {
-      try {
-        var json = jsDocs(fs.readFileSync(filepath).toString());
-      } catch(e) {
-        console.error('Cannot parse file', filepath);
-        var json = {};
-      }
-      return componentsToMarkdown('api', json, filepath, i++);
-    }),
-    styles.slice(0, 1).map(function(filepath) {
-      var json = docgen.parse(
-        fs.readFileSync(filepath),
-        docgenHelpers.findExportedObject,
-        [docgen.handlers.propTypeHandler]
-      );
-      return componentsToMarkdown('style', json, filepath, i++);
-    })
+    components.map(renderComponent),
+    apis.map(renderAPI('api')),
+    styles.slice(0, 1).map(renderStyle),
+    polyfills.map(renderAPI('Polyfill'))
   );
 };

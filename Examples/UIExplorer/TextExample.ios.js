@@ -1,10 +1,15 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
+ * The examples provided by Facebook are for non-commercial testing and
+ * evaluation purposes only.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * Facebook reserves all rights not expressly granted.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
+ * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @flow
  */
@@ -29,7 +34,7 @@ var Entity = React.createClass({
 
 var AttributeToggler = React.createClass({
   getInitialState: function() {
-    return {fontWeight: 'bold', fontSize: 15};
+    return {fontWeight: '500', fontSize: 15};
   },
   increaseSize: function() {
     this.setState({
@@ -59,6 +64,7 @@ var AttributeToggler = React.createClass({
 
 exports.title = '<Text>';
 exports.description = 'Base component for rendering styled text.';
+exports.displayName = 'TextExample';
 exports.examples = [
 {
   title: 'Wrap',
@@ -128,9 +134,37 @@ exports.examples = [
   title: 'Font Weight',
   render: function() {
     return (
-      <Text style={{fontWeight: 'bold'}}>
-        Move fast and be bold
-      </Text>
+      <View>
+        <Text style={{fontWeight: '100'}}>
+          Move fast and be ultralight
+        </Text>
+        <Text style={{fontWeight: '200'}}>
+          Move fast and be light
+        </Text>
+        <Text style={{fontWeight: 'normal'}}>
+          Move fast and be normal
+        </Text>
+        <Text style={{fontWeight: 'bold'}}>
+          Move fast and be bold
+        </Text>
+        <Text style={{fontWeight: '900'}}>
+          Move fast and be ultrabold
+        </Text>
+      </View>
+    );
+  },
+},  {
+  title: 'Font Style',
+  render: function() {
+    return (
+      <View>
+        <Text style={{fontStyle: 'normal'}}>
+          Normal text
+        </Text>
+        <Text style={{fontStyle: 'italic'}}>
+          Italic text
+        </Text>
+      </View>
     );
   },
 }, {
@@ -278,7 +312,7 @@ var styles = StyleSheet.create({
     backgroundColor: 'rgba(100, 100, 100, 0.3)'
   },
   entity: {
-    fontWeight: 'bold',
+    fontWeight: '500',
     color: '#527fe4',
   },
 });

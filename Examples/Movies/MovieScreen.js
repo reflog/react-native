@@ -1,10 +1,15 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
+ * The examples provided by Facebook are for non-commercial testing and
+ * evaluation purposes only.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * Facebook reserves all rights not expressly granted.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
+ * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @flow
  */
@@ -109,7 +114,7 @@ var styles = StyleSheet.create({
   movieTitle: {
     flex: 1,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   rating: {
     marginTop: 10,
@@ -119,7 +124,7 @@ var styles = StyleSheet.create({
   },
   ratingValue: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   mpaaWrapper: {
     alignSelf: 'flex-start',
@@ -131,7 +136,7 @@ var styles = StyleSheet.create({
   mpaaText: {
     fontFamily: 'Palatino',
     fontSize: 13,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   mainSection: {
     flexDirection: 'row',
@@ -148,7 +153,7 @@ var styles = StyleSheet.create({
     marginVertical: 10,
   },
   castTitle: {
-    fontWeight: 'bold',
+    fontWeight: '500',
     marginBottom: 3,
   },
   castActor: {

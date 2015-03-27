@@ -100,6 +100,7 @@ var ComponentDoc = React.createClass({
             link =
               <a href={slugify(name) + '.html#style'}>{name}#style...</a>;
           } else {
+            name = 'Flexbox';
             link =
               <a href={slugify(name) + '.html#proptypes'}>{name}...</a>;
           }
@@ -193,7 +194,7 @@ var APIDoc = React.createClass({
         <Header level={4} className="propTitle" toSlug={method.name}>
           {method.modifiers.length && <span className="propType">
             {method.modifiers.join(' ') + ' '}
-          </span>}
+          </span> || ''}
           {method.name}
           <span className="propType">
             ({method.params
@@ -216,10 +217,18 @@ var APIDoc = React.createClass({
 
 
   renderMethods: function(methods) {
+    if (!methods.length) {
+      return null;
+    }
     return (
-      <div className="props">
-        {methods.map(this.renderMethod)}
-      </div>
+      <span>
+        <H level={3}>Methods</H>
+        <div className="props">
+          {methods.filter((method) => {
+            return method.name[0] !== '_';
+          }).map(this.renderMethod)}
+        </div>
+      </span>
     );
   },
 
@@ -233,7 +242,6 @@ var APIDoc = React.createClass({
         <Marked>
           {this.removeCommentsFromDocblock(content.docblock)}
         </Marked>
-        <H level={3}>Methods</H>
         {this.renderMethods(content.methods)}
       </div>
     );
