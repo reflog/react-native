@@ -8,6 +8,8 @@
  */
 'use strict';
 
+var path = require("path");
+
 // Don't forget to everything listed here to `testConfig.json`
 // modulePathIgnorePatterns.
 var sharedBlacklist = [
@@ -31,17 +33,20 @@ var iosBlacklist = [
 ];
 
 function escapeRegExp(str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+  var escaped = str.replace(/[\-\[\]\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+  return escaped.replace(/\//g,"\\"+path.sep);
 }
 
 function blacklist(isWeb, additionalBlacklist) {
-  return new RegExp('(' +
+  var pt = '(' +
     (additionalBlacklist || []).concat(sharedBlacklist)
       .concat(isWeb ? webBlacklist : iosBlacklist)
       .map(escapeRegExp)
       .join('|') +
-    ')$'
-  );
+    ')$';
+//    pt.replace(/\//g,path.sep);
+    console.log("Blacklist:" + pt)
+  return new RegExp(pt);
 }
 
 module.exports = blacklist;

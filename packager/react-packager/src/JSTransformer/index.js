@@ -85,12 +85,12 @@ Transformer.prototype.loadFileAndTransform = function(filePath) {
   if (this._failedToStart) {
     return this._failedToStart;
   }
-
   var workers = this._workers;
   return this._cache.get(filePath, function() {
     return readFile(filePath)
       .then(function(buffer) {
         var sourceCode = buffer.toString();
+        console.log("Transforming:" + filePath);
 
         return q.nfbind(workers)({
           sourceCode: sourceCode,

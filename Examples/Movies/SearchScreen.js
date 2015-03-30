@@ -1,4 +1,4 @@
-/**
+﻿/**
  * The examples provided by Facebook are for non-commercial testing and
  * evaluation purposes only.
  *
@@ -315,7 +315,7 @@ var SearchBar = React.createClass({
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'red',
   },
   centerText: {
     alignItems: 'center',
@@ -338,7 +338,7 @@ var styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: '#eeeeee',
+    backgroundColor: '#2eeeee',
   },
   spinner: {
     width: 30,

@@ -18,7 +18,9 @@ var Promise = q.Promise;
 
 var detectingWatcherClass = new Promise(function(resolve) {
   exec('which watchman', function(err, out) {
+    console.log("Watchman: " + out.length + " " + JSON.stringify(err));
     if (err || out.length === 0) {
+        console.info(sane.NodeWatcher);
       resolve(sane.NodeWatcher);
     } else {
       resolve(sane.WatchmanWatcher);
@@ -28,7 +30,7 @@ var detectingWatcherClass = new Promise(function(resolve) {
 
 module.exports = FileWatcher;
 
-var MAX_WAIT_TIME = 3000;
+var MAX_WAIT_TIME = 10000;
 
 // Singleton
 var fileWatcher = null;
@@ -78,6 +80,7 @@ function createWatcher(rootConfig) {
       }, MAX_WAIT_TIME);
 
       watcher.once('ready', function() {
+          console.log("READY");
         clearTimeout(rejectTimeout);
         resolve(watcher);
       });
