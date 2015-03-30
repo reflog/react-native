@@ -315,7 +315,7 @@ var SearchBar = React.createClass({
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: '#c0c0c0',
   },
   centerText: {
     alignItems: 'center',

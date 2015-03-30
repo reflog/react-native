@@ -48,7 +48,7 @@ function FileWatcher(rootConfigs) {
   ).then(function(watchers) {
     watchers.forEach(function(watcher) {
       watcher.on('all', function(type, filepath, root) {
-        fileWatcher.emit('all', type, filepath, root);
+        fileWatcher.emit('all', type, filepath.replace(/\\/g,'/'), root.replace(/\\/g,'/'));
       });
     });
     return watchers;
