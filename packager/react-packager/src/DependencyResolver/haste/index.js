@@ -13,6 +13,7 @@ var FileWatcher = require('../../FileWatcher');
 var DependencyGraph = require('./DependencyGraph');
 var ModuleDescriptor = require('../ModuleDescriptor');
 var declareOpts = require('../../lib/declareOpts');
+var os = require('os');
 
 var DEFINE_MODULE_CODE = [
   '__d(',
@@ -56,6 +57,15 @@ var validateOpts = declareOpts({
     required: true,
   },
 });
+
+// returns true if this is running on Windows
+function isWindows() { return !!os.type().match(/Windows/);}
+// convert a Windows path to forward slash path
+function __convertPath(path) {
+    return path.replace(/\\/g,'/');
+}
+// check if we're running on windows. If not, then this function becomes a no-op
+var convertPath = isWindows() ? __convertPath : function(path) { return path; }
 
 function HasteDependencyResolver(options) {
   var opts = validateOpts(options);
@@ -149,7 +159,7 @@ HasteDependencyResolver.prototype.wrapModule = function(module, code) {
    code.replace(REL_REQUIRE_STMT, function(codeMatch, depName) {
      var depId = resolvedDeps[depName];
      if (depId != null) {
-       return 'require(\'' + depId.replace(/\\/g,'/') + '\')'; // convert path seps
+       return 'require(\'' + convertPath(depId) + '\')'; // convert path separators
      } else {
        return codeMatch;
      }
@@ -157,9 +167,9 @@ HasteDependencyResolver.prototype.wrapModule = function(module, code) {
 
 return DEFINE_MODULE_CODE.replace(DEFINE_MODULE_REPLACE_RE, function(key) {
    return {
-     '_moduleName_': module.id.replace(/\\/g, '/'), // convert path separators
+     '_moduleName_': convertPath(module.id), // convert path separators
      '_code_': relativizedCode,
-     '_deps_': JSON.stringify(resolvedDepsArr.map( function(i) { return i.replace(/\\/g,'/'); })),
+     '_deps_': JSON.stringify(resolvedDepsArr.map( convertPath )),
    }[key];
    });
 };

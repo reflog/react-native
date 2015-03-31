@@ -8,7 +8,7 @@
  */
 'use strict';
 
-var path = require("path"); // used for path separator 
+var path = require("path"); // used for path separator
 
 // Don't forget to everything listed here to `testConfig.json`
 // modulePathIgnorePatterns.
@@ -35,6 +35,7 @@ var iosBlacklist = [
 
 function escapeRegExp(str) {
   var escaped = str.replace(/[\-\[\]\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+  // convert the '/' into an escaped local file separator
   return escaped.replace(/\//g,"\\"+path.sep);
 }
 
