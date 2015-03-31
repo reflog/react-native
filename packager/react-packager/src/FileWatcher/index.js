@@ -13,10 +13,16 @@ var sane = require('sane');
 var q = require('q');
 var util = require('util');
 var exec = require('child_process').exec;
+var os = require('os');
 
 var Promise = q.Promise;
 
+// returns true if this is running on Windows
+function isWindows() { return !!os.type().match(/Windows/);}
+
 var detectingWatcherClass = new Promise(function(resolve) {
+  // watchman is not available on Windows, just return NodeWatcher
+  if (isWindows()) resolve(sane.NodeWatcher);
   exec('which watchman', function(err, out) {
     if (err || out.length === 0) {
       resolve(sane.NodeWatcher);
