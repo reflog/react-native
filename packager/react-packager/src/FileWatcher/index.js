@@ -22,7 +22,11 @@ function isWindows() { return !!os.type().match(/Windows/);}
 
 var detectingWatcherClass = new Promise(function(resolve) {
   // watchman is not available on Windows, just return NodeWatcher
-  if (isWindows()) resolve(sane.NodeWatcher);
+  if (isWindows()) {
+      process.nextTick( function() { resolve(sane.NodeWatcher); });
+      console.log("Running on windows");
+      return;
+  }
   exec('which watchman', function(err, out) {
     if (err || out.length === 0) {
       resolve(sane.NodeWatcher);
@@ -35,6 +39,7 @@ var detectingWatcherClass = new Promise(function(resolve) {
 module.exports = FileWatcher;
 
 var MAX_WAIT_TIME = 3000;
+if (isWindows()) MAX_WAIT_TIME = 10000; // extend wait time if using NodeWatcher
 
 // Singleton
 var fileWatcher = null;
