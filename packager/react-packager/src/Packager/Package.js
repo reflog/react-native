@@ -39,7 +39,8 @@ Package.prototype.addModule = function(
 Package.prototype.finalize = function(options) {
   options = options || {};
   if (options.runMainModule) {
-    var runCode = ';require("' + this._mainModuleId + '");';
+    // convert path separator if required
+    var runCode = ';require("' + this._mainModuleId.replace(/\\/g,"/") + '");';
     this.addModule(
       runCode,
       runCode,

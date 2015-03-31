@@ -146,22 +146,22 @@ HasteDependencyResolver.prototype.wrapModule = function(module, code) {
   }
 
   var relativizedCode =
-    code.replace(REL_REQUIRE_STMT, function(codeMatch, depName) {
-      var depId = resolvedDeps[depName];
-      if (depId != null) {
-        return 'require(\'' + depId + '\')';
-      } else {
-        return codeMatch;
-      }
-    });
+   code.replace(REL_REQUIRE_STMT, function(codeMatch, depName) {
+     var depId = resolvedDeps[depName];
+     if (depId != null) {
+       return 'require(\'' + depId.replace(/\\/g,'/') + '\')'; // convert path seps
+     } else {
+       return codeMatch;
+     }
+   });
 
-  return DEFINE_MODULE_CODE.replace(DEFINE_MODULE_REPLACE_RE, function(key) {
-    return {
-      '_moduleName_': module.id,
-      '_code_': relativizedCode,
-      '_deps_': JSON.stringify(resolvedDepsArr),
-    }[key];
-  });
+return DEFINE_MODULE_CODE.replace(DEFINE_MODULE_REPLACE_RE, function(key) {
+   return {
+     '_moduleName_': module.id.replace(/\\/g, '/'), // convert path separators
+     '_code_': relativizedCode,
+     '_deps_': JSON.stringify(resolvedDepsArr.map( function(i) { return i.replace(/\\/g,'/'); })),
+   }[key];
+   });
 };
 
 HasteDependencyResolver.prototype.getDebugInfo = function() {
